@@ -1,8 +1,6 @@
 import numpy as np
 import os
-
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-
 
 def generateSignals(data,fs = 5000, wlen = 10, overlap = 5):
     wlen = wlen*fs
@@ -14,9 +12,7 @@ def generateSignals(data,fs = 5000, wlen = 10, overlap = 5):
 
 def distanceTransform(signal, rpeaks):
     length = len(signal)
-    
     transform = []
-    
     lower = rpeaks[0]
     for j in range(0, lower):
         transform.append(abs(lower - j))
