@@ -28,7 +28,12 @@ from scipy import stats
 import matplotlib.transforms as transforms
 
 class CEBSTestDataset(Dataset):
-    def __init__(self,patient, fs = 5000, wlen = 10, overlap = 5):
+    def __init__(self,patient, test_data_path, fs = 5000, wlen = 10, overlap = 5):
+        
+        self.wlen = wlen
+        self.fs = fs
+        self.overlap = overlap
+        
         test_data_path = "/hdd/bci/CEBS/processed_data/test/"
         input_tensor_str = test_data_path + "inputSig_"+ str(patient) + ".pt"
         groundTruth_tensor_str = test_data_path+ "groundTruth1_" + str(patient) + ".pt"
@@ -36,13 +41,10 @@ class CEBSTestDataset(Dataset):
         self.mer_input = torch.load(input_tensor_str)[:,0,:].unsqueeze(1)
         self.mer_ground = torch.load(groundTruth_tensor_str)
         self.ecg = torch.load(ecg_tensor)[:,0,:].unsqueeze(1)
-        self.wlen = wlen
-        self.fs = fs
-        self.overlap = overlap
-        print("  {}  INPUT : {}  GROUNDTRUTH : {}".format(patient,self.mer_input.shape,self.mer_ground.shape))                   
         
     def __len__(self):
         return len(self.mer_input)
+    
     def __getitem__(self,idx):
         
         label = self.mer_ground[idx]
