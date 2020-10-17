@@ -27,7 +27,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 
-def infer(model, inp, prominence = 0.5, distance = 1,smoothen = True, downsampling_factor = 10 ):
+def infer(model, inp, prominence = 0.5, distance = 1,smoothen = True, downsampling_factor = 1):
 	model.cuda()
 	model.eval()
 	inp = inp[:,0,:].view(1, 1, inp.shape[-1]).cuda()
@@ -41,13 +41,13 @@ def infer(model, inp, prominence = 0.5, distance = 1,smoothen = True, downsampli
 		downsampled = out.flatten()[0::downsampling_factor]
 	else:
 		downsampled = out.flatten()
-	valley_loc_downsampled,xxx = getValleys(downsampled, prominence = prominence,distance = distance//downsampling_factor)
-	return out,valley_loc_downsampled*downsampling_factor,xxx
+	valley_loc_downsampled,_ = getValleys(downsampled, prominence = prominence,distance = distance//downsampling_factor)
+	return out,valley_loc_downsampled*downsampling_factor
 
 def getValleys(signal, prominence, distance ):
 	signal = signal*-1
-	valley_loc,xxx = find_peaks(signal, prominence = prominence,distance = distance)
-	return valley_loc,xxx
+	valley_loc, _ = find_peaks(signal, prominence = prominence,distance = distance)
+	return valley_loc,_
 
 def smooth(signal,window_len=50):
 	y = pd.DataFrame(signal).rolling(window_len,center = True, min_periods = 1).mean().values.reshape((-1,))

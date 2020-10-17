@@ -15,13 +15,12 @@ from torch.utils.tensorboard import SummaryWriter
 from glob import glob
 import warnings
 
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 import argparse
 
 from model import SeismoNet
 from dataloader import CEBSDataset
-
+from utils import *
 warnings.filterwarnings("ignore")
 
 
@@ -46,30 +45,18 @@ def main(args):
     typ = args.file_type
     
     print ("Training SeismoNet on CEBS")
-    print (args)
-
-    data = torch.load(os.path.join(data_path,'data.pt'))
-    target = torch.load(os.path.join(data_path,'labels.pt'))
-    print ("total no.of windows", len(data))
-    x_train, x_val, y_train, y_val = train_test_split(data, target, random_state = 42, test_size = val_size + test_size)
-    x_val,x_test, y_val,y_test = train_test_split(x_val,y_val, random_state = 32, test_size = (test_size/(test_size + val_size)))
-    train, val, test = TensorDataset(x_train, y_train), TensorDataset(x_val, y_val), TensorDataset(x_test, y_test)
-    
-    train_loader = DataLoader(train, batch_size=train_batch_size, shuffle =False)
-    val_loader = DataLoader(val, batch_size = val_batch_size, shuffle = False)
-    test_loader = DataLoader(test, batch_size = 1 , shuffle = False)
     
 
-    
+    train_loader, val_loader, test_loader = create_loaders(data_path, "data.pt","labels.pt", test_size, val_size, train_batch_size, val_batch_size)
     writer = SummaryWriter()
     
-    model= SeismoNet(x_train.shape).cuda()
+    model= SeismoNet(get_shape(train_loader)).cuda()
     
     
-    optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum = 0.9)
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,milestones=[50,150,250], gamma=0.1)
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr)
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,milestones=[100,200], gamma=0.1)
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.SmoothL1Loss()
 
     best_loss = 1000
     best_accuracy = 0
@@ -88,7 +75,6 @@ def main(args):
 
             inputs = inputs.cuda()
             labels = labels.cuda()
-            
             
             optimizer.zero_grad()
             
@@ -142,9 +128,9 @@ if __name__ == "__main__":
     parser.add_argument('--file_type',nargs="?", const = "b", default = "b", help = "file type")
     parser.add_argument('--test_size',  nargs='?',const = 0.2,default = 0.2,  help = 'Size of Test Set (float)')
     parser.add_argument('--val_size',nargs='?', const = 0.2,default = 0.2, help = 'Size of Validation Set (float)')
-    parser.add_argument('--train_batch_size',nargs='?', const = 64,default = 64, help = 'Batch Size of Train Loader')
-    parser.add_argument('--val_batch_size',nargs='?', const = 64,default = 64, help = 'Batch Size of Validation Loader')
-    parser.add_argument('--epochs',nargs='?', const = 150,default = 150, help = 'Number of Epochs')
+    parser.add_argument('--train_batch_size',nargs='?', const = 32,default = 32, help = 'Batch Size of Train Loader')
+    parser.add_argument('--val_batch_size',nargs='?', const = 32,default = 32, help = 'Batch Size of Validation Loader')
+    parser.add_argument('--epochs',nargs='?', const = 300,default = 300, help = 'Number of Epochs')
     parser.add_argument("--lr",nargs = "?",const = 0.001,default = 0.001, help = 'Learning Rate')
     signal.signal(signal.SIGINT, dump_and_exit)
     args = parser.parse_args()
