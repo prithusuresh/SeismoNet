@@ -39,29 +39,43 @@ def main(args):
     model = SeismoNet(get_shape(test_loader))
     model.load_state_dict(torch.load(args.best_model)["model"])
     window_info  = []
+    metrics = []
+    if not(os.path.exists("results/")):
+        os.mkdir("results/")
     
     for i,x in enumerate(test_loader):
         
         if len(x) > 1:
             pred_distance_transform, pred_peak_locations = infer(model, x[0] ,downsampling_factor = 1)
             print (pred_distance_transform, pred_peak_locations)
-            if args.evaluate:
-                actual_peak_locations = np.where(x[1] == 0.0)[0] 
-                metrics = evaluate_window(actual_peak_locations, pred_peak_locations)
+
         else:
             pred_distance_transform, peak_locations = infer(model, x, downsampling_factor = 1)
+            
+        if args.evaluate:
+            assert len(x)>1
+            actual_peak_locations = np.where(x[1] == 0.0)[0]  #provide actual rpeak locations as array 
+            metrics.append(evaluate_window(actual_peak_locations, pred_peak_locations))
         
-        plt.figure(figsize = [10,5])
-        plt.subplot(1,2,1)
-        plt.plot(x[0].cpu().numpy().flatten())
-        plt.subplot(1,2,2)
-        plt.plot(pred_distance_transform.flatten())
-        plt.plot(x[1].cpu().numpy().flatten())
-        plt.scatter(pred_peak_locations, pred_distance_transform.flatten()[pred_peak_locations])
-        plt.savefig("test.png")
+        if args.save_figures:
+            if not(os.path.exits("results/figures")):
+                os.mkdir("results/figures")
+            plt.figure(figsize = [10,5])
+            plt.subplot(1,2,1)
+            plt.plot(x[0].cpu().numpy().flatten())
+            plt.subplot(1,2,2)
+            plt.plot(pred_distance_transform.flatten())
+            plt.plot(x[1].cpu().numpy().flatten())
+            plt.scatter(pred_peak_locations, pred_distance_transform.flatten()[pred_peak_locations])
+            plt.savefig("results/figures/{}.png".format(i+1))
+            
+            
+        
         window_info.append(pred_peak_locations)
-        break
-        
+        if i == 5:
+            break
+    metrics = pd.DataFrame(metrics)
+    metrics.to_csv("results/results.csv")
         
 
         
@@ -73,6 +87,7 @@ if __name__ == "__main__":
     parser.add_argument('--file_type',nargs="?", const = "b", default = "b", help = "file type")
     parser.add_argument('--best_model',nargs="?", const = "best_model/best_model_pretrained.pt", default = "best_model/best_model_pretrained.pt", help = "Best Model File")
     parser.add_argument('--evaluate', action = "store_true", help = "Compare against label or not")
+    parser.add_argument('--save_figures', action = "store_true", help = "save figure along with results")
     args = parser.parse_args()
 
     main(args)
