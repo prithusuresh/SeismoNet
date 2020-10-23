@@ -1,8 +1,10 @@
 # SeismoNet
 
-This repository contains code used for the paper "End-to-End Deep Learning for Reliable Cardiac Activity Monitoring using Seismocardiograms" which has been accepted for presentation at the 19th International Conference on Machine Learning and Applications, Boca Raton, FL, USA.
+This repository contains code used for the paper "End-to-End Deep Learning for Reliable Cardiac Activity Monitoring using Seismocardiograms" which has been accepted for presentation at the [19th International Conference on Machine Learning and Applications](https://www.icmla-conference.org/icmla20/index.html), Boca Raton, FL, USA.
 
 SeismoNet is a Deep Convolutional Neural Network which aims to provide an end-to-end solution to robustly observe heart activity from Seismocardiogram (SCG) signals. These SCG signals are motion-based and can be acquired in an easy, user-friendly fashion.
+
+Preprint available at [arxiv](https://arxiv.org/abs/2010.05662) :newspaper:
 
 ## Getting Started :rocket: 
 
@@ -30,33 +32,26 @@ Inception Residual Block
 
 Install all dependencies with:
 ```bash
-$ pip install requirements.txt
+$ pip install -r requirements.txt
 ```
 Download datasets with:
 ```bash
 $ wget -r -N -c -np https://physionet.org/files/cebsdb/1.0.0/
 ```
-Train models with downloaded datasets:
+Preprocess raw data:
 ```bash
-$ python trainer.py --dataset MNIST
-$ python trainer.py --dataset SVHN
-$ python trainer.py --dataset CIFAR10
+$ python preprocess.py --data_path /path/to/data --wlen 15 --overlap 5
 ```
-Test models with saved checkpoints:
+Train SeismoNet using preprocessed data:
 ```bash
-$ python evaler.py --dataset MNIST --checkpoint ckpt_dir
-$ python evaler.py --dataset SVHN --checkpoint ckpt_dir
-$ python evaler.py --dataset CIFAR10 --checkpoint ckpt_dir
+$ python trainer.py --data_path /path/to/preprocessed/data --test_size 0.3 --val_size 0.2 --epochs 350 --lr 0.0001
 ```
-The *ckpt_dir* should be like: ```train_dir/default-MNIST_lr_0.0001_update_G5_D1-20170101-194957/model-1001```
 
-Train and test your own datasets:
-
-* Create a directory
+Take inference and evaluate model:
 ```bash
-$ mkdir datasets/YOUR_DATASET
+$ python infer.py --best_model /path/to/model --data_path /path/to/preprocessed/data --evaluate
 ```
 
 ## Authors
 
-Prithvi Suresh, Naveen Narayanan, Pranav CV, Vineeth Vijayaraghavan
+[Prithvi Suresh](https://github.com/prithusuresh/), [Naveen Narayanan](https://github.com/naveenggmu/), Pranav CV, Vineeth Vijayaraghavan
