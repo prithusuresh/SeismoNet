@@ -25,7 +25,7 @@ SeismoNet consists of 5 blocks:
 <img src="figure/architecture.png"/>
 
 Inception Residual Block
-<img src="figure/incresblock.png"/>
+<img src="figure/incresblock.png" height="300"/>
 
 ## Usage
 
