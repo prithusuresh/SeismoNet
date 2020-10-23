@@ -40,11 +40,11 @@ $ wget -r -N -c -np https://physionet.org/files/cebsdb/1.0.0/
 ```
 Preprocess raw data:
 ```bash
-$ python preprocess.py --data_path /path/to/data --wlen 15 --overlap 5
+$ python preprocess.py --data_path /path/to/data
 ```
 Train SeismoNet using preprocessed data:
 ```bash
-$ python trainer.py --data_path /path/to/preprocessed/data --test_size 0.3 --val_size 0.2 --epochs 350 --lr 0.0001
+$ python trainer.py --data_path /path/to/preprocessed/data 
 ```
 
 Take inference and evaluate model:
