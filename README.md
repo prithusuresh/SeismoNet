@@ -2,16 +2,15 @@
 
 This repository contains code used for the paper "End-to-End Deep Learning for Reliable Cardiac Activity Monitoring using Seismocardiograms" which has been accepted for presentation at the 19th International Conference on Machine Learning and Applications, Boca Raton, FL, USA.
 
-SeismoNet is a Deep Convolutional Neural Network which aims to provide an end-to-end solution to robustly observe heart activity from Seismocardiogram (SCG) signals. These SCG signals are motion-based and can be acquired in an easy,
-user-friendly fashion.
+SeismoNet is a Deep Convolutional Neural Network which aims to provide an end-to-end solution to robustly observe heart activity from Seismocardiogram (SCG) signals. These SCG signals are motion-based and can be acquired in an easy, user-friendly fashion.
 
 ## Getting Started :rocket: 
 
-* [trainer.py](trainer.py) Helps you train the model.
-* [infer.py](infer.py) Helps you to take inference on the ecg signal.
-* [preprocess.py](preprocess.py) This file helps you preprocess the raw ecg signal
+* [preprocess.py](preprocess.py) Preprocesses the CEBS dataset available at [physionet](https://physionet.org/content/cebsdb/1.0.0/)  
+* [trainer.py](trainer.py) Helps train the model.
+* [infer.py](infer.py) Helps take inference on any input SCG signal.
 * [utils.py](utils.py) This file consists of all the helper functions.
-* [model.py](model.py) SeismoNet model code present here.
+* [model.py](model.py) SeismoNet architecture in torch
 
 ## Model Architecture
 
