@@ -25,8 +25,6 @@ SeismoNet consists of 5 blocks:
 
 <img src="figure/architecture.png"/>
 
-Inception Residual Block
-<img src="figure/incresblock.png" height="300"/>
 
 ## Usage
 
@@ -51,7 +49,9 @@ Take inference and evaluate model:
 ```bash
 $ python infer.py --best_model /path/to/model --data_path /path/to/preprocessed/data --evaluate
 ```
-
+## Inference
+<img src="figure/inference.gif>
+          
 ## Authors
 
 [Prithvi Suresh](https://github.com/prithusuresh/), [Naveen Narayanan](https://github.com/naveenggmu/), Pranav CV, Vineeth Vijayaraghavan
