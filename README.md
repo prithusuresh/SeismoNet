@@ -50,7 +50,7 @@ Take inference and evaluate model:
 $ python infer.py --best_model /path/to/model --data_path /path/to/preprocessed/data --evaluate
 ```
 ## Inference
-<img src="figure/inference.gif>
+<img src="figure/inference.gif">
           
 ## Authors
 
