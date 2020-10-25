@@ -16,17 +16,9 @@ Preprint available at [arxiv](https://arxiv.org/abs/2010.05662) :newspaper:
 
 ## Model Architecture
 
-SeismoNet consists of 5 blocks:
-* Inception-Residual Block
-* Contracting Convolutional Block (CCB)
-* Expanding Convolutional Block (ECB)
-* Convolutional Ensemble Averaging Block
-* Denoising Block
+SeismoNet, an extension of the U-net, is an architecture which consists of 12 blocks which is made up of 5 Contracting Convolutional Blocks (CCB), 5 Expanding Convolutional Blocks (ECB), 1 Convolutional Ensemble Averaging Block and 1 Denoising Block. It transforms the SCG signal into an interpretable waveform consisting of relevant information which allows for extraction of heart rate indices.
 
 <img src="figure/architecture.png"/>
-
-Inception Residual Block
-<img src="figure/incresblock.png" height="300"/>
 
 ## Usage
 
